@@ -180,6 +180,7 @@ Main questions to address while troubleshooting
 
 ## Future Consideration
 
+### Other Encryption Mechanisms On The Horizon
 `age` supports mechanisms to use existing ssh keys with the `age` binary.
 However this is not yet supported by upstream sops as of 2023-10-18.
 
@@ -191,3 +192,11 @@ Related projects:
 - [Mic92/ssh-to-age](https://github.com/Mic92/ssh-to-age)
 - [Mic92/ssh-to-pgp](https://github.com/Mic92/ssh-to-pgp)
 - [FiloSottile/age](https://github.com/FiloSottile/age)
+
+### Further Simple-Sops Development
+
+This is an initial proof of concept for use/testing.  
+If the viability is strong, then replacing the shell-scripts with a more rigid
+binary would be the next step. (Preference `rust` due to `clap` library
+ease-of-use)
+
