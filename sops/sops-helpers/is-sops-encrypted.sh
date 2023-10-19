@@ -3,6 +3,8 @@
 #set -x
 
 declare ENCRYPTION_DETERMINATE2 ENCRYPTION_DETERMINATE2
+
+# Both must be true to be considered encrypted.
 ENCRYPTION_DETERMINATE1=' *.+: "?ENC\[.*\]"?,?$' # regex
 ENCRYPTION_DETERMINATE2='^( |\t)*"?sops"?: ?\{?$' # regex
 
@@ -42,7 +44,6 @@ for i in "${@}"; do
 done
 
 if [[ ${unencrypted_count} -eq 0 ]]; then
-  # if 
   rc=0
 else
   rc=${unencrypted_count}

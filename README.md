@@ -1,15 +1,35 @@
 # Simple-sops for managing arbitrary files in a repo
 
+This is a skeleton repo with helper scripts to manage files in a project for
+easily encrypting to publish, and unencrypting to work on.
+
+The most common workflow should play out as follows:
+
+- Pull repo
+- setup `.envrc`
+- run `sops/sops-marshal.sh decrypt`
+- edit files
+- run `sops/sops-marshal.sh encrypt`
+- `git add ...`, `git commit ...`
+- list that manages what gets encrypted/decrypted is located here
+  `.simple-sops-managed-files`
+
+Git hooks are implemented for protecting against commiting files which should be
+encrypted.
+
+## Note(s)
+
 Examples use `age` keys for simplicity. Other options are available but are not
 covered here.
 
 ## Assumptions
 
-- Packages installed: `age`, `sops`, `direnv`.
+- Required packages `age`, `sops`
+- Recommended packages `direnv`
 - An `age` key is setup in at least one of the following locations.
   - OPTION 1: `.envrc` or the environment has an entry for:
     - `export SOPS_AGE_KEY="PRIV_KEY_STRING_GOES_HERE"`
-  - OPTION 2: `age` key is present in `~/.config/sops/age/keys.txt`.
+  - OPTION 2: `age` key is present in `~/.config/sops/age/keys.txt`
   - OPTION 3: `age` key is available in another dir and the following entry is
     present in `.envrc` or the environment.
     - `export SOPS_AGE_KEY_FILE="PRIV_KEY_PATH_GOES_HERE"`
@@ -19,18 +39,19 @@ covered here.
 - A list of files which `sops` will be managing. This is represented in a line
   delimited list in one of the following options.
   - OPTION 1: Default behavior is to read the file: `.simple-sops-managed-files`
-  - OPTION 2: File with a different name (e.g. `files.list`) provided as `-f files.list`
-    argument to `sops-marshal.sh`. Example:
+  - OPTION 2: File with a different name (e.g. `files.list`) provided as
+    `-f files.list` argument to `sops-marshal.sh`. Example:
     - `sops/sops-marshal.sh -f files.list encrypt`
     - `sops/sops-marshal.sh -f files.list decrypt`
 
 ## Typical workflow of existing encrypted repo
 
 - git clone / git pull / git fetch ... etc
-- Check to ensure the files listed in `.simple-sops-managed-files` (or equivalent option)
-  contains a line-delimited list of all files you want `sops` to act on (encrypt|decrypt).
-- Check `.sops.yaml` to ensure your public key is present so you can decrypt/encrypt
-  as with the appropriate keys.
+- Check to ensure the files listed in `.simple-sops-managed-files`
+  (or equivalent option) contains a line-delimited list of all files you want
+  `sops` to act on (encrypt|decrypt).
+- Check `.sops.yaml` to ensure your public key is present so you can
+  decrypt/encrypt as with the appropriate keys.
 - Decrypt:
   - `sops/sops-marshal.sh decrypt`
   - `sops/sops-marshal.sh -f myfiles.list decrypt`
@@ -45,9 +66,12 @@ covered here.
 - `git clone ...` this template repo.
 - remove the git config: `rm -rf .git`
 - `git init`
+- Re-add the git-hook which protects against commiting a file that needs to be
+  encrypted
+  - `ln -s ../../hooks/pre-commit-check-for-unencrypted .git/hooks`
 - Populate this repo's directory with your project.
-- Update `.simple-sops-managed-files` with the names of the files you want sops to
-  encrypt/decrypt.
+- Update `.simple-sops-managed-files` with the names of the files you want sops
+  to encrypt/decrypt.
 - Update `.sops.yaml`
   - Remove example entries.
   - Populate public keys appropriately.
@@ -58,6 +82,19 @@ covered here.
   - `sops/sops-marshal.sh -f myfiles.list encrypt`
 - Commit / Push
 
+
+## Protection Against Unencrypted Commits
+
+Pre-commit checks are performed by `hook/pre-commit-check-for-unencrypted`
+
+This will difference files which perform an intersection against the files
+to-be-commited, against the files in `.simple-sops-managed-files`
+
+If it identifies a file which is to be commited, and is present in
+`.simple-sops-managed-files`, it will perform a check to determine if it
+encrypted.
+
+If it is not encrypted, the commit will fail.
 
 # Appendix
 

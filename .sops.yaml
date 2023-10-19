@@ -1,0 +1,13 @@
+keys:
+  key_groups: &example_key_group
+    #  Public Keys
+    - age:
+      - 'age1nd9hj056h4q3zcdklf2mnh5yasfumzpx638ysx60dvw2lgh90gas4de2zq'
+      - 'age1pp4k2jfsplvt2d6l4pemgdhlf6hkgefask0c9d307axa3h9f9shqmhm8gh' #REMOVEME
+    #- kms:
+    #  - 'arn:aws:kms:....'
+    #- pgp:
+    #  - 'pubkey-goes-here, may also be refered to as a fingerprint'
+creation_rules:
+  - path_regex: '\.(ya?ml|json|toml|nix)'  # rule applies only to yaml, yml, json, and toml
+    key_groups: *example_key_group  # all private-pairs of the public-keys are also capable of decrypting
