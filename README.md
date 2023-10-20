@@ -66,9 +66,6 @@ covered here.
 - `git clone ...` this template repo.
 - remove the git config: `rm -rf .git`
 - `git init`
-- Re-add the git-hook which protects against commiting a file that needs to be
-  encrypted
-  - `ln -s ../../hooks/pre-commit-check-for-unencrypted .git/hooks`
 - Populate this repo's directory with your project.
 - Update `.simple-sops-managed-files` with the names of the files you want sops
   to encrypt/decrypt.
