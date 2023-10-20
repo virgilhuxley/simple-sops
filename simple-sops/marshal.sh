@@ -53,7 +53,7 @@ mapfile -t FILES_TO_MARSHAL < "${SOPS_LIST_FILE}"
 # Capture the path of `is-sops-encrypted.sh`, relative to the script location
 # and not the current working directory. (Note: symlinks not accounted for)
 declare IS_SOPS_ENCRYPTED
-IS_SOPS_ENCRYPTED=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )/sops-helpers/is-sops-encrypted.sh
+IS_SOPS_ENCRYPTED=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )/helpers/is-sops-encrypted.sh
 
 #############
 # FUNCTIONS #

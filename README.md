@@ -7,9 +7,9 @@ The most common workflow should play out as follows:
 
 - Pull repo
 - setup `.envrc`
-- run `sops/sops-marshal.sh decrypt`
+- run `simple-sops/marshal.sh decrypt`
 - edit files
-- run `sops/sops-marshal.sh encrypt`
+- run `simple-sops/marshal.sh encrypt`
 - `git add ...`, `git commit ...`
 - list that manages what gets encrypted/decrypted is located here
   `.simple-sops-managed-files`
@@ -40,9 +40,9 @@ covered here.
   delimited list in one of the following options.
   - OPTION 1: Default behavior is to read the file: `.simple-sops-managed-files`
   - OPTION 2: File with a different name (e.g. `files.list`) provided as
-    `-f files.list` argument to `sops-marshal.sh`. Example:
-    - `sops/sops-marshal.sh -f files.list encrypt`
-    - `sops/sops-marshal.sh -f files.list decrypt`
+    `-f files.list` argument to `marshal.sh`. Example:
+    - `simple-sops/marshal.sh -f files.list encrypt`
+    - `simple-sops/marshal.sh -f files.list decrypt`
 
 ## Typical workflow of existing encrypted repo
 
@@ -53,12 +53,12 @@ covered here.
 - Check `.sops.yaml` to ensure your public key is present so you can
   decrypt/encrypt as with the appropriate keys.
 - Decrypt:
-  - `sops/sops-marshal.sh decrypt`
-  - `sops/sops-marshal.sh -f myfiles.list decrypt`
+  - `simple-sops/marshal.sh decrypt`
+  - `simple-sops/marshal.sh -f myfiles.list decrypt`
 - Work on your files (they're just plain text at this point)
 - Encrypt:
-  - `sops/sops-marshal.sh encrypt`
-  - `sops/sops-marshal.sh -f myfiles.list encrypt`
+  - `simple-sops/marshal.sh encrypt`
+  - `simple-sops/marshal.sh -f myfiles.list encrypt`
 - Commit / Push
 
 ## Typical workflow of new repo
@@ -75,8 +75,8 @@ covered here.
   - Update the `regex` of `creation_rules` if needed.
   - Add additional `creation_rules` if needed.
 - Encrypt:
-  - `sops/sops-marshal.sh encrypt`
-  - `sops/sops-marshal.sh -f myfiles.list encrypt`
+  - `simple-sops/marshal.sh encrypt`
+  - `simple-sops/marshal.sh -f myfiles.list encrypt`
 - Commit / Push
 
 
@@ -171,7 +171,7 @@ Main questions to address while troubleshooting
 - Is your file containing the list-of-files properly populated?
   - Default location is `.simple-sops-managed-files`
   - Can be overwritten via `-f $different_file` argument when calling
-    `sops/sops-marshal.sh`
+    `simple-sops/marshal.sh`
   - File contents is a line-delimited list of file-names relative to where the
     script is called.
 

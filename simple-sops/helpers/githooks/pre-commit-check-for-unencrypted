@@ -17,13 +17,13 @@ declare -i count
 
 declare -a sops_managed_changed_files
 mapfile sops_managed_changed_files <(comm -12 <(sort -u .simple-sops-managed-files) <(printf '%s\n' "${files[@]}" | sort -u))
-sops/sops-helpers/is-sops-encrypted.sh "${sops_managed_changed_files[@]}"
+simple-sops/helpers/is-sops-encrypted.sh "${sops_managed_changed_files[@]}"
 
 count=$?
 
 # If the files being changed, are in the list of `.simple-sops-managed-files`, then verify they are encrypted
-# TODO: call `sops/sops-helpers/is-sops-encrypted.sh $files`
-# `sops/sops-helpers/is-sops-encrypted.sh $files` will return a number (false/fail) if any file is not encrypted
+# TODO: call `simple-sops/helpers/is-sops-encrypted.sh $files`
+# `simple-sops/helpers/is-sops-encrypted.sh $files` will return a number (false/fail) if any file is not encrypted
 # That number is the count of files which are not encrypted.
 # If it is false (meaning some files are still unencrypted) print a message to that effect.
 
@@ -32,7 +32,7 @@ count=$?
 if [[ $count -gt 0 ]]; then
   echo "At least $count of the following files are not encrypted and should be"
   echo -e "${sops_managed_changed_files[@]}"
-  echo Please run: sops/sops-marshal.sh encrypt
+  echo Please run: simple-sops/marshal.sh encrypt
   echo And re-add the file before commiting.
 fi
 exit $count
