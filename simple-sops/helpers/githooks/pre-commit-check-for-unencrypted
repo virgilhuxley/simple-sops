@@ -16,7 +16,7 @@ declare -i count
 #comm -1 -2 <(printf '%s\n' "${array1[@]}" | sort -u) <(printf '%s\n' "${array2[@]}" | sort -u)
 
 declare -a sops_managed_changed_files
-mapfile sops_managed_changed_files <(comm -12 <(sort -u .simple-sops-managed-files) <(printf '%s\n' "${files[@]}" | sort -u))
+mapfile -t sops_managed_changed_files < <(comm -12 <(sort -u .simple-sops-managed-files) <(printf '%s\n' "${files[@]}" | sort -u))
 simple-sops/helpers/is-sops-encrypted.sh "${sops_managed_changed_files[@]}"
 
 count=$?
