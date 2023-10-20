@@ -1,24 +1,17 @@
 #!/usr/bin/env bash
 
-#set -x
+set -x
 
 declare ENCRYPTION_DETERMINATE2 ENCRYPTION_DETERMINATE2
 
 # Both must be true to be considered encrypted.
-ENCRYPTION_DETERMINATE1=' *.+: "?ENC\[.*\]"?,?$' # regex
-ENCRYPTION_DETERMINATE2='^( |\t)*"?sops"?: ?\{?$' # regex
+ENCRYPTION_DETERMINATE1=$'( |\t)*.+: "?ENC\[.*\]"?,?$'
+ENCRYPTION_DETERMINATE2=$'^( |\t)*"?sops"?: ?\{?$'
 
 declare -i rc
 
 declare -i unencrypted_count
 unencrypted_count=0
-
-declare gr
-if which 'rg' &> /dev/null; then
-  gr='rg'
-else
-  gr='grep'
-fi
 
 #############
 # FUNCTIONS #
@@ -27,8 +20,8 @@ fi
 function is-file-encrypted {
   local FILE
   FILE="${1}"
-  if "${gr}" -q "${ENCRYPTION_DETERMINATE1}" "${FILE}" \
-    && "${gr}" -q "${ENCRYPTION_DETERMINATE2}" "${FILE}"; then
+  if grep -E -q "${ENCRYPTION_DETERMINATE1}" "${FILE}" \
+    && grep -E -q "${ENCRYPTION_DETERMINATE2}" "${FILE}"; then
       : # pass
   else
     unencrypted_count=$(( unencrypted_count + 1 ))
