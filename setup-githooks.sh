@@ -35,5 +35,5 @@ done
 #########
 for i in "${HOOKFILES[@]}"; do
   echo "creating link: ${i} -> ${GITHOOK_DIR}/$(basename ${i})"
-  ln -sf "${RELATIVE_PATH}/${i}" "${GITHOOK_DIR}/$(basename ${i})"
+  ln -sf "${RELATIVE_PATH}/${i}" "${GITHOOK_DIR}/pre-commit"
 done

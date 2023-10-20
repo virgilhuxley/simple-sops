@@ -57,6 +57,12 @@ git config --global --add safe.directory /project # This is due to git not being
 
 git add example-secrets/new.json files.list
 git commit -m 'attempting to commit an unencrypted file that should be encrypted'
+
+#output:
+#At least 1 of the following files are not encrypted and should be
+#example-secrets/new.json
+#Please run: simple-sops/marshal.sh encrypt
+#And re-add the file before commiting.
 ```
 
 
