@@ -21,6 +21,45 @@ The most common workflow should play out as follows:
 Examples use `age` keys for simplicity. Other options are available but are not
 covered here.
 
+
+## Demo
+
+```
+docker run --rm -v "$PWD:/project/" -it ubuntu:22.04 bash
+# Drops into bash shell inside docker envrionment
+
+cd /project
+apt update && apt install -y age curl git libdigest-sha-perl && ./simple-sops/helpers/install-sops.sh
+source envrc-example
+
+cat example-secrets/test.toml
+# output is sops-encrypted format
+
+simple-sops/marshal.sh decrypt
+
+cat example-secrets/test.toml
+# output is plain-text
+
+simple-sops/marshal.sh encrypt
+
+cat example-secrets/test.toml
+# output is sops-encrypted format
+
+### Protect against unencrypted commits
+./setup-githooks.sh
+
+echo '{ "example": "json" }' > example-secrets/new.json
+echo example-secrets/new.json >> files.list
+
+# example-secrets/new.json will now be monitored
+
+git config --global --add safe.directory /project # This is due to git not being setup on this new container
+
+git add example-secrets/new.json files.list
+git commit -m 'attempting to commit an unencrypted file that should be encrypted'
+```
+
+
 ## Assumptions
 
 - Required packages `age`, `sops`.
