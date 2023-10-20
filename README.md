@@ -5,17 +5,16 @@ easily encrypting to publish, and unencrypting to work on.
 
 The most common workflow should play out as follows:
 
-- Pull repo
-- setup `.envrc`
-- run `simple-sops/marshal.sh decrypt`
-- edit files
-- run `simple-sops/marshal.sh encrypt`
-- `git add ...`, `git commit ...`
-- list that manages what gets encrypted/decrypted is located here
-  `.simple-sops-managed-files`
-
-Git hooks are implemented for protecting against commiting files which should be
-encrypted.
+- Pull repo.
+- Setup `.envrc`.
+- Run `setup-githooks.sh` to prevent managed files from being commited in
+  unencrypted form.
+- Run `simple-sops/marshal.sh decrypt`.
+- Edit files.
+- Run `simple-sops/marshal.sh encrypt`.
+- `git add ...`, `git commit ...`.
+- The list that manages what gets encrypted/decrypted is located here
+  `.simple-sops-managed-files`.
 
 ## Note(s)
 
@@ -24,21 +23,26 @@ covered here.
 
 ## Assumptions
 
-- Required packages `age`, `sops`
-- Recommended packages `direnv`
+- Required packages `age`, `sops`.
+  - It is recommended to install via your system's package manager.
+  - If it is not available in the system's package manager, there are helper scripts
+    to install the binaries directly from github in `simple-sops/helpers`.
+    - The defaults of these helper scripts are for linux X86/AMD64, however they can
+      easily be edited to work for other environments.
+- Recommended packages `direnv`.
 - An `age` key is setup in at least one of the following locations.
   - OPTION 1: `.envrc` or the environment has an entry for:
     - `export SOPS_AGE_KEY="PRIV_KEY_STRING_GOES_HERE"`
-  - OPTION 2: `age` key is present in `~/.config/sops/age/keys.txt`
+  - OPTION 2: `age` key is present in `~/.config/sops/age/keys.txt`.
   - OPTION 3: `age` key is available in another dir and the following entry is
     present in `.envrc` or the environment.
-    - `export SOPS_AGE_KEY_FILE="PRIV_KEY_PATH_GOES_HERE"`
+    - `export SOPS_AGE_KEY_FILE="PRIV_KEY_PATH_GOES_HERE"`.
 - `.sops.yaml` is populated with all of the public-keys who's private-key-pairs
   are expected to be able to decrypt the files. These public-keys are also used
   to re-encrypt.
 - A list of files which `sops` will be managing. This is represented in a line
   delimited list in one of the following options.
-  - OPTION 1: Default behavior is to read the file: `.simple-sops-managed-files`
+  - OPTION 1: Default behavior is to read the file: `.simple-sops-managed-files`.
   - OPTION 2: File with a different name (e.g. `files.list`) provided as
     `-f files.list` argument to `marshal.sh`. Example:
     - `simple-sops/marshal.sh -f files.list encrypt`
@@ -82,10 +86,10 @@ covered here.
 
 ## Protection Against Unencrypted Commits
 
-Pre-commit checks are performed by `hook/pre-commit-check-for-unencrypted`
+Pre-commit checks are performed by `hook/pre-commit-check-for-unencrypted`.
 
 This will difference files which perform an intersection against the files
-to-be-commited, against the files in `.simple-sops-managed-files`
+to-be-commited, against the files in `.simple-sops-managed-files`.
 
 If it identifies a file which is to be commited, and is present in
 `.simple-sops-managed-files`, it will perform a check to determine if it
@@ -100,7 +104,7 @@ If it is not encrypted, the commit will fail.
 age-keygen
 ```
 
-STDOUT will display a private and a pub key. For example
+STDOUT will display a private and a pub key. For example:
 
 ```txt
 # created: 2000-01-00T00:00:00-00:00
@@ -127,7 +131,7 @@ export SOPS_AGE_KEY_FILE="~/.config/sops/age/key.txt" # this is the default path
 
 #### Option 2 User-level-key
 
-`age` private-key is stored in `~/.config/sops/age/keys.txt`
+`age` private-key is stored in `~/.config/sops/age/keys.txt`.
 
 ### Public-Key
 
@@ -159,19 +163,19 @@ Main questions to address while troubleshooting
 
 - Is `.sops.yaml` populated with the appropriate keys?
   - If you can encrypt/decrypt but your team cannot, check to ensure that your
-    team's keys are properly identified in `sops.yaml`
+    team's keys are properly identified in `sops.yaml`.
 - Is your private key in a usable location? For example
   - The default location the system will look for an `age`key is
     `~/.config/sops/age/keys.txt` and is formatted to look like this
-    `AGE-SECRET-KEY-1EACHPZ9T4P8XCPNNMDQW3LGC2LU5ZMMFUAP95QR6WGHVZKZKSQ4QMW9S6G`
-  - Alternatively it can be provided in two ways via environment variables
+    `AGE-SECRET-KEY-1EACHPZ9T4P8XCPNNMDQW3LGC2LU5ZMMFUAP95QR6WGHVZKZKSQ4QMW9S6G`.
+  - Alternatively it can be provided in two ways via environment variables.
     - `export SOPS_AGE_KEY_FILE` which will contain the path of the private-key.
     - `export SOPS_AGE_KEY` which will contain the value of the private-key.
-  - If using dir-env (`.envrc`), remember to run `direnv allow`
+  - If using dir-env (`.envrc`), remember to run `direnv allow`.
 - Is your file containing the list-of-files properly populated?
-  - Default location is `.simple-sops-managed-files`
+  - Default location is `.simple-sops-managed-files`.
   - Can be overwritten via `-f $different_file` argument when calling
-    `simple-sops/marshal.sh`
+    `simple-sops/marshal.sh`.
   - File contents is a line-delimited list of file-names relative to where the
     script is called.
 
