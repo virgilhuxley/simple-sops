@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -euo pipefail
+
 ###########
 # OPTARGS #
 ###########
@@ -66,9 +68,7 @@ function encrypt-file {
     echo "${FILE}": encrypted, skipping
   else
     echo -n "${FILE}": encrypting ...
-    set -e
     sops --encrypt --in-place "${FILE}"
-    set +e
     echo ' done'
   fi
 }
@@ -78,9 +78,7 @@ function decrypt-file {
   FILE="${1}"
   if "${IS_SOPS_ENCRYPTED}" "${FILE}"; then
     echo -n "${FILE}": decrypting ...
-    set -e
     sops --decrypt --in-place "${FILE}"
-    set +e
     echo ' done'
   else
     echo "${FILE}": not encrypted, skipping

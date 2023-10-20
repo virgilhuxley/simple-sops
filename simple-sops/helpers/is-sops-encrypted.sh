@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -x
+set -euo pipefail
 
 declare ENCRYPTION_DETERMINATE2 ENCRYPTION_DETERMINATE2
 
