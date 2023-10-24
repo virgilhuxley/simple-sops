@@ -5,7 +5,7 @@ set -euo pipefail
 ########
 # VARS #
 ########
-HOOKFILES=( simple-sops/helpers/githooks/pre-commit-check-for-unencrypted )
+HOOKFILE='simple-sops/helpers/githooks/pre-commit-check-for-unencrypted'
 
 RELATIVE_PATH='../..'
 
@@ -33,7 +33,11 @@ done
 #########
 # MAIN #
 #########
-for i in "${HOOKFILES[@]}"; do
-  echo "creating link: ${i} -> ${GITHOOK_DIR}/$(basename ${i})"
-  ln -sf "${RELATIVE_PATH}/${i}" "${GITHOOK_DIR}/pre-commit"
-done
+
+if [[ -e "${GITHOOK_DIR}/pre-commit" ]]; then
+  echo "File \"${GITHOOK_DIR}/pre-commit\" exists. Aborting" >&2
+  exit 2
+else
+  echo "creating link: ${GITHOOK_DIR}/pre-commit -> ${HOOKFILE} "
+  ln -s "${RELATIVE_PATH}/${HOOKFILE}" "${GITHOOK_DIR}/pre-commit"
+fi
